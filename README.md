@@ -1,5 +1,7 @@
 # Django/Tailwind/Prism blog which displays a folder structure with classified micro web projects examples
 
+<a href="illustration.png"><img align="center" width="500" src="tutorials.png"></a>
+
 File classification are made with json files:
 
 - Category directory had a category.json file
