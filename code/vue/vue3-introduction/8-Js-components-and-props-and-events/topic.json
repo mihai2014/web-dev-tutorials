@@ -1,0 +1,5 @@
+{
+  "title": "Components / props / events",
+  "tags": ["vue","components","props","events"],
+  "files": ["index.html","main.js","components/ItemDetails.js","components/ItemDisplay.js"]	  
+}	

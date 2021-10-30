@@ -1,0 +1,231 @@
+<template>
+  <dir>
+
+    <h1 v-if="debug">
+      <p>Json file(debug):</p>
+      <p>{{ data }}</p>
+      <br/>
+      <p>items:</p>
+      <p>{{ topics }}</p>
+      <p>escaped html</p>
+      <p>{{ html }}</p>
+      <br>
+    </h1>
+
+    <p><topic-list/></p>
+
+<!--
+    <dir v-for="(item, index) in data" :key="index">
+      {{ item.type }} {{ item.name }}
+    </dir>
+-->
+<!--
+    <dir
+     v-for="(item, index) in topicsObj"
+      :key="index"
+    >
+
+        <router-link class="text-blue-500 hover:text-blue-800" to="/listTopicItem">
+        {{ item.dir }}
+        </router-link>
+
+        <p
+        v-for="(item2, index) in item.paths"
+        :key="index"
+        >
+        </p>
+
+    </dir>
+-->
+  </dir>
+</template>
+
+<script>
+import { defineComponent } from 'vue/dist/vue.esm-bundler';
+// import { useHead } from '@vueuse/head';
+// import { mapState } from 'vuex';
+// eslint-disable-next-line no-unused-vars
+// import GenericPage from '@/components/GenericPage.vue';
+
+const escapeHtml = require('escape-html');
+
+// eslint-disable-next-line no-unused-vars
+const TopicList = defineComponent({
+  template: '',
+  data() {
+    return {
+      count: 1,
+    };
+  },
+  methods: {
+    // eslint-disable-next-line no-unused-vars
+    showTopic(dirName) {
+      // console.log(dirName);
+      // alert(dirName);
+      this.$store.state.dirTopic = dirName;
+    },
+  },
+});
+
+export default {
+  // inject: ['registerComp'],
+  data() {
+    return {
+      debug: false,
+      html: '',
+      // folderImg: '<FolderIcon class="h-5 w-5 text-blue-500"/>',
+      folderImg: '<img src="/img/folder.png" alt="folderImg" width="15" height="15" class="folder">',
+      // fileImg: '<DocumentIcon class="h-5 w-5 text-blue-500"/>',
+      fileImg: '<img src="/img/file.jpg" alt="fileImg" width="15" height="15" class="file">',
+      data: [],
+      topics: [],
+      error: '',
+      topicsObj: [],
+      topicsComponents: [],
+      dirSections: [],
+      count: 0,
+    };
+  },
+  components: {
+    // eslint-disable-next-line vue/no-unused-components
+    TopicList, // FolderIcon, DocumentIcon, // ReadFile,
+  },
+  updated() {
+    // console.log('???', this.topicsObj);
+  },
+  setup() {
+
+  },
+  created() {
+    // this.loadFile();
+    // alert(MyComponent.template);
+  },
+  beforeMount() {
+    // console.log(this.$store.state.data);
+    this.data = this.$store.state.data;
+    this.topics = this.$store.state.topics;
+
+    const tree = JSON.parse(JSON.stringify(this.data));
+    // console.log('start', tree[0]);
+    this.scan(tree[0]);
+    TopicList.template = this.html;
+  },
+  mounted() {
+    // const tree = JSON.parse(JSON.stringify(this.data));
+    // console.log('start', tree[0]);
+    // this.scan(tree[0]);
+    // this.html = `'<ul>'${this.html}</ul>`;
+  },
+  methods: {
+    // showTopic(dirName) {
+    //   console.log(dirName);
+    //   console.log('da');
+    // },
+    isTopicDirectory(dirItem) {
+      let flag = false;
+      dirItem.contents.forEach((subitem) => {
+        // eslint-disable-next-line eqeqeq
+        if ((subitem.type == 'file') && (subitem.name == 'topic.json')) {
+          flag = true;
+        }
+      });
+      return flag;
+    },
+    isMainDirectory(dirItem) {
+      let flag = false;
+      dirItem.contents.forEach((subitem) => {
+        // eslint-disable-next-line eqeqeq
+        if ((subitem.type == 'file') && (subitem.name == 'class.json')) {
+          flag = true;
+        }
+      });
+      return flag;
+    },
+    scan(item) {
+      // temporary development safety cycles limitation (to delete)
+      this.count += 1; if (this.count === 1000) {
+        // eslint-disable-next-line no-alert
+        alert('max cycles limitation'); return;
+      }
+
+      // about json tree file/data
+      // given the fact that only a directory coud have 'contents' property
+      // every item that has 'contents' is a directory else it is a file
+
+      if (item.contents) {
+        this.html += '<ul>';
+        // add new "dir section"
+        this.dirSections.push(item.name);
+        const currentDirectory = this.dirSections.join('/');
+
+        let dirClass = 'text-blue-500 ';
+        if (this.isMainDirectory(item)) {
+          dirClass += 'hover:text-red-500 cursor-pointer';
+        } else if (this.isTopicDirectory(item)) {
+          dirClass += 'text-indigo-600';
+        } else {
+          // do NOT show folders that are not main or topics (eq. assets, img ...)
+          // modify for showing the == entire tree ==
+          dirClass = 'invisible';
+        }
+
+        this.html += `<span class="${dirClass}">${this.folderImg}<li style="">`;
+        if (this.isMainDirectory(item)) {
+          this.html += `<router-link  to="/show-topic" @click="showTopic('${currentDirectory}')">${item.name}</router-link>`;
+        } else {
+          this.html += `${item.name}`;
+        }
+        this.html += '</li></span>';
+
+        item.contents.forEach((subitem) => {
+          this.scan(subitem);
+        });
+        this.html += '</ul>';
+        // remove last "dir section"
+        this.dirSections.pop();
+      } else {
+        // files here !!! this gives the == entire tree == : do NOT remove !!!
+        // this.html += `${this.fileImg}<li style="color: green;">`;
+        // this.html += `${item.name} `;
+        // this.html += '</li>';
+      }
+    },
+    computed: {
+    //  ...mapState(['data']),
+      rawHtml() {
+        return escapeHtml(this.html);
+      },
+    },
+  },
+};
+// <p><read-file :file="${filePath}" :lang="${fileLang}"/></p>
+</script>
+
+<style>
+ul {
+  /* color: blue; */
+  border-left: 25px solid white;
+  padding-left: 20px;
+}
+li {
+  /*color: red;*/
+  /*position: relative;*/
+  /*padding-left: 10px;*/
+  position: static;
+}
+.folder {
+  float:left;
+  margin-right: 5px;
+  margin-top: 5px;
+  position: relative;
+}
+.file {
+  float: left;
+  margin-right: 5px;
+  margin-top: 5px;
+  position: relative;
+}
+.invisible {
+  display: none;
+}
+</style>

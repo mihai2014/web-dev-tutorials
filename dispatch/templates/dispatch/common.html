@@ -1,0 +1,143 @@
+{% extends "dispatch/base.html" %}
+{% load static %}
+
+{% block metatags %}
+    <meta name="keywords" content="{{ tagsStr }}">
+{% endblock %}
+
+{% block menu1 %}
+  {% comment %}{% include "dispatch/menu.html" %}{% endcomment %}
+  <div id="menu1"></div>
+
+  <script>
+      const navigation = [
+      {
+          id: '0', name: 'Home', href: '/home', // current: true,
+      },
+      {
+          id: '1', name: 'About', href: '/about', // current: false,
+      },
+      {
+          id: '2', name: 'Topics', href: '/topics', // current: false,
+      },
+      ];
+
+      const primaryItemsDiv = document.getElementById("menu1");
+      const Selected = 'py-4 px-2 text-blue-500 border-b-4 border-blue-500 font-semibold';
+      const notSelected = 'py-4 px-2 text-gray-500 font-semibold hover:text-blue-500 transition duration-300';
+
+      function setPrimaryMenu(item, index) {
+          let el = document.createElement("a");
+          el.setAttribute('href', item.href);
+          el.textContent = item.name;
+          if (item.name == "{{ name }}") {
+            el.setAttribute('class', Selected);
+          } else {
+            el.setAttribute('class', notSelected);  
+          }
+          primaryItemsDiv.appendChild(el);
+      }
+
+      navigation.forEach(setPrimaryMenu);
+  </script>
+{% endblock %}
+
+{% block menu2 %}
+<div id="menu2"></div>
+
+<script>
+  const secondaryItemsDiv = document.getElementById("menu2");
+  const Selected2 =    'block text-sm px-2 py-4 text-white bg-green-500 font-semibold';
+  const notSelected2 = 'block text-sm px-2 py-4 hover:bg-green-500 transition duration-300';
+
+  function setMobileMenu(item, index) {
+      let li = document.createElement("li");
+      let a = document.createElement("a");
+      li.appendChild(a);
+      a.setAttribute('href', item.href);
+      a.textContent = item.name;
+      if (item.name == "{{ name }}") {
+        li.setAttribute('class', 'active');
+        a.setAttribute('class', Selected2);
+      } else {
+        a.setAttribute('class', notSelected2);  
+      }
+      secondaryItemsDiv.appendChild(a);
+  }
+
+  navigation.forEach(setMobileMenu);
+
+</script>
+{% endblock %}
+
+{% block content %}
+
+<style>
+ul {
+  /* color: blue; */
+
+  /*border-left: 10px solid white;*/
+  /*padding-left: 10px;*/
+}
+li {
+  /*color: red;*/
+  /*position: relative;*/
+  /*padding-left: 10px;*/
+
+  /*position: static;*/
+}
+.folder {
+  float:left;
+  margin-right: 5px;
+  margin-top: 5px;
+  position: relative;
+}
+.file {
+  float: left;
+  margin-right: 5px;
+  margin-top: 5px;
+  position: relative;
+}
+.invisible {
+  display: none;
+}
+.tags {
+  display: inline;
+  border: 1px solid blue;
+  border-radius: 25px;
+  padding: 5px;
+  height: 2em;   
+}
+</style>
+
+  {% autoescape off %}
+    {% if name == "Home" %}
+    {% include "dispatch/home.html" %}
+    {% endif %}    
+
+    {% if name == "About" %}
+    {% include "dispatch/about.html" %}
+    {% endif %}    
+  {% endautoescape %}
+
+  {% autoescape off %}
+    <h1 class="font-bold text-4xl">{{ title }}</h1>
+    <br>
+    
+    {% if category|length > 0 %}
+    <div style="display: inline; color:blue;" class="font-bold">Category:</div>
+    <div class="tags">{{ category }}</div> 
+    {% endif %}
+
+    {% if tags|length > 0 %}
+    <div style="display: inline; margin-left:10px; color:blue;" class="font-bold">Tags:</div>
+    {% for tag in tags %}
+      <div class="tags">{{ tag }}</div>
+    {% endfor %}  
+    {% endif %}
+
+    <p>{{ data }}</p>
+
+  {% endautoescape %}
+
+{% endblock %}

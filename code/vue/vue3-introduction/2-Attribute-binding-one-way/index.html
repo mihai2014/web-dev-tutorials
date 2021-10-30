@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <title>Vue</title>
+    <!-- Import Styles -->
+    <link rel="stylesheet" href="./assets/styles.css" />    
+    <!-- Import Vue.js -->
+    <script src="https://unpkg.com/vue@3.0.11/dist/vue.global.js"></script>
+  </head>
+  <body>
+    <!-- Attribute bind: ==one way bind== -->
+    <div id="app">
+
+      <p><img v-bind:src="image" v-bind:alt="description"></p>
+      <p><a v-bind:href="url">Link</a></p>
+      <p><div v-bind:class="isActive">Active</div></p>
+      <p><span v-bind:style="styleIsActive">Text</span></p>
+      
+      <!--shorthand-->
+
+      <p><img :src="image" :alt="description"></p>
+      <p><a :href="url">Link</a></p>
+      <p><div :class="isNotActive">Active</div></p>
+      <p><span :style="styleIsNotActive">Text</span></p>
+      
+    </div>
+
+    <!-- Import App -->
+    <script src="./main.js"></script>
+
+    <!-- Mount App -->
+    <script>
+      const mountedApp = app.mount('#app')
+    </script>
+  </body>
+</html>

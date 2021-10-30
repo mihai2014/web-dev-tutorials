@@ -1,0 +1,10 @@
+.isActive {
+  color:green; 
+  font-weight: bold;
+}
+
+.isNotActive {
+    color:red; 
+    font-weight: bold;
+  }
+  

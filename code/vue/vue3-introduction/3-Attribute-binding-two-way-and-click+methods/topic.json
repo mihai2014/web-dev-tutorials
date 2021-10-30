@@ -1,0 +1,5 @@
+{
+  "title": "Attribute binding - two way / click event / define methods",
+  "tags": ["vue","attribute binding","two way","click event","define methods"],
+  "files": ["index.html","main.js"]
+}

@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <title>Vue</title>    
+    <!-- Import Vue.js -->
+    <script src="https://unpkg.com/vue@3.0.11/dist/vue.global.js"></script>
+  </head>
+  <body>
+    <!-- js components -->
+    <!--install es6-string-html extension in VS code for html template codes highlighting-->
+    <div id="app">
+      <item-display :message="message"></item-display>
+    </div>
+
+    <!-- Import App -->
+    <script src="./main.js"></script>
+
+    <script src="./components/ItemDisplay.js"></script>
+    <script src="./components/ItemDetails.js"></script>
+
+    <!-- Mount App -->
+    <script>
+      const mountedApp = app.mount('#app')
+    </script>
+  </body>
+</html>

@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <title>Vue</title>    
+    <!-- Import Vue.js -->
+    <script src="https://unpkg.com/vue@3.0.11/dist/vue.global.js"></script>
+  </head>
+  <body>
+    <div id="app">
+      <!-- class and style binding and computed property -->
+
+      <p>Hoover over below</p>
+
+      <div 
+        v-for="(variant, index) in variants" 
+        :key="variant.id" 
+        @mouseover="updateDisplay(index)" 
+        class="color" 
+        :style="{ backgroundColor: variant.color }">
+        {{ variant.animalClass }}
+      </div>      
+
+      <p>{{ selectedVariant }}</p>
+      <p>{{ animalClass }}</p>
+      <p>{{ image }}</p>
+
+      <img v-bind:src="image" v-bind:alt="image" width="500" height="600">
+
+    </div>
+
+    <!-- Import App -->
+    <script src="./main.js"></script>
+
+    <!-- Mount App -->
+    <script>
+      const mountedApp = app.mount('#app')
+    </script>
+  </body>
+</html>

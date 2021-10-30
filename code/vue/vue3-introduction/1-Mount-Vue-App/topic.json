@@ -1,0 +1,5 @@
+{
+  "title": "Mount vue app",
+  "tags": ["vue","mount app"],
+  "files": ["index.html","main.js"]
+}
