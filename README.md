@@ -18,3 +18,4 @@ File classification are made with json files:
 `
 
 Folder/files tree structure are stored in "code" folder.
+"Code" folder is at the same level as project folder.

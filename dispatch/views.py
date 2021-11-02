@@ -14,7 +14,7 @@ folderImg = static('/dispatch/img/folder.png')
 # folderCode = static('/code/')
 # folderCode  = "static"
 # str(settings.BASE_DIR)
-docs = Documents(str(settings.BASE_DIR) + '/code/',folderImg, fileImg)
+docs = Documents(str(settings.BASE_DIR) + '/../code/',folderImg, fileImg)
 docs.getTopics()
 print("tree loaded")
 
@@ -59,7 +59,7 @@ def fileExtension(name):
 
 def itemTopic(request, file_path):
     baseDir = str(settings.BASE_DIR)
-    compose = (baseDir, '/code/', file_path)
+    compose = (baseDir, '/../code/', file_path)
     dirPath = "".join(compose)
 
     html = '''

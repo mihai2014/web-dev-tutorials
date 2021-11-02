@@ -62,7 +62,7 @@ class JsonTree:
         #if(self.nr == 4):
         #    sys.exit(0)
 
-        for item in os.listdir(dir):
+        for item in sorted(os.listdir(dir)):
 
             fullpath = os.path.join(dir, item)
 

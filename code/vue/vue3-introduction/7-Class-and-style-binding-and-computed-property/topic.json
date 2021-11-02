@@ -1,5 +1,0 @@
-{
-  "title": "Class and style binding / computed property",
-  "tags": ["vue","class binding","style binding","computed property"],
-  "files": ["index.html","main.js"]
-}

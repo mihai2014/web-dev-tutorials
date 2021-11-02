@@ -1,5 +1,0 @@
-{
-  "title": "List (conditional) rendering",
-  "tags": ["vue","list rendering","conditional rendering"],
-  "files": ["index.html","main.js"]
-}

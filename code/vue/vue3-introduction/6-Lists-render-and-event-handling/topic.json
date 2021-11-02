@@ -1,5 +1,0 @@
-{
-  "title": "List render (using key) and event handling",
-  "tags": ["vue","list render","event handling","key"],
-  "files": ["index.html","main.js"]
-}
