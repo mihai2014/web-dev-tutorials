@@ -92,6 +92,7 @@ class JsonTree:
 
 class Documents:
     def __init__(self, path, folderImg, fileImg):
+        self.debug = False
         self.path = path
         self.tree = {}
         self.html = ''
@@ -147,22 +148,22 @@ class Documents:
         imgClass = ''
         href = "#"
         if(self.category(item)):
-            #print("category"," ", end='')
+            if self.debug: print("category"," ", end='')
             dirClass = 'text-green-600 underline'
         elif(self.topic(item)):
-            #print("topic"," ", end='')
+            if self.debug: print("topic"," ", end='')
             dirClass = 'text-blue-500 hover:text-red-500 cursor-pointer'            
             href = "/".join(self.dirSections)
         elif(self.includedInTopic):
-            #print("in-topic"," ", end='')
+            if self.debug: print("in-topic"," ", end='')
             if(self.onlyTopics):
                 dirClass = 'invisible'    
                 imgClass = 'invisible'
         else:
-            #print("sub-category", " ", end='')
+            if self.debug: print("sub-category", " ", end='')
             pass
 
-        # print("/".join(self.dirSections))    
+        if self.debug: print("/".join(self.dirSections))    
 
         self.html += f'<img src="{self.folderImg}" alt="D-img" width="15" height="15" class="folder {imgClass}" >'
         self.html += f'<li class="{dirClass}">'
@@ -200,7 +201,7 @@ class Documents:
                 self.scanTree(subitem)
 
             self.dirSections.pop()    
-            self.includedInTopic = False
+            if(self.topic(item)): self.includedInTopic = False
             self.html += '</ul>'    
 
         # files
@@ -209,6 +210,7 @@ class Documents:
                 self.addFile(item)
 
     def getTopics(self):
+        self.onlyTopics = True
         self.html = ''
         self.scanTree(self.tree)
         # print(self.tree)
