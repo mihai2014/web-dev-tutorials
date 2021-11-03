@@ -10,4 +10,5 @@ urlpatterns = [
     path('topics', views.topics, name = 'topics'),
     path('item/<path:file_path>', views.itemTopic, name = 'item'),
     # path('code/<path:file_path>', views.itemTopic, name = 'item'),
+    path('test', views.test, name = 'home'),
 ]

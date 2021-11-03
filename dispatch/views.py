@@ -31,6 +31,21 @@ def favicon(request):
 #    '''    
 #    return render(request, 'dispatch/common.html', {"data": data, "name": "Home"})
 
+def test(request):
+
+    baseDir = str(settings.BASE_DIR)
+    
+    #compose = (baseDir, '/../code/', file_path)
+    compose = (baseDir, '/dispatch/templates/dispatch/test-tabs.html')
+    filePath = "".join(compose)
+
+    with open(filePath) as f:
+        content = f.read()
+    #print(content)    
+
+    #return HttpResponse(baseDir)
+    return render(request, 'dispatch/common.html', {"data": content,  "name": "Test"})
+
 def home(request):
     data = '''
     <h1>Home</h1>    
@@ -54,46 +69,100 @@ def topics(request):
 
     return render(request, 'dispatch/common.html', {"data":html, "name": "Topics"})
 
+itemTopicHtml = ""
+
+# tab buttons
+def tabs(filesList):
+
+    firstTime = True
+
+    selected = '''text-gray-600 py-4 px-10 block hover:text-blue-500
+    focus:outline-none text-blue-500 border-b-2 font-medium border-blue-500    
+    '''
+    notSelected = '''text-gray-600 py-4 px-10 block hover:text-blue-500
+    focus:outline-none'''
+
+    htmlTabs = '<div class="bg-white"><div class="flex flex-col sm:flex-row">'
+
+    for fileName in filesList:
+        if firstTime: 
+            cls = selected 
+            active = "true"
+            firstTime = False
+        else: 
+            cls = notSelected
+            active = "false"
+
+        htmlTabs += f'<button id="button-{fileName}" active="{active}" class="{cls}">{fileName}</button>'
+        print(fileName)
+    
+    htmlTabs += '</div></div>'  
+
+    # htmlTabs += jsScript
+
+    return htmlTabs
+
+# html string with all topic files
+def showFile(fileName, filePath, fileContent):
+    global itemTopicHtml
+
+    # initial, all tabs are invisible, will be made wisible by js from the tabs menu (see tabs.js)
+    # for debug situations make class="visible" just below
+    itemTopicHtml += f'<div class="invisible" id="file-{fileName}">'
+
+    itemTopicHtml += f'<div>{fileName}</div>'
+
+    #itemTopicHtml += f'<p><a href="{filePath}">{filePath}</a></p><br>'
+    itemTopicHtml += fileContent
+
+    itemTopicHtml += f'</div>'
+
+
 def fileExtension(name):
     return name.split(".")[1]
 
 def itemTopic(request, file_path):
+    global itemTopicHtml
+
+    # reset
+    itemTopicHtml = ""
+
     baseDir = str(settings.BASE_DIR)
     compose = (baseDir, '/../code/', file_path)
     dirPath = "".join(compose)
 
-    html = '''
-    <i>Folder: ''' + dirPath + '''</i>
-    <br><br>
-    '''
+    tabFiles = []
 
     files = os.listdir(dirPath)
-    #print(files)
 
-    for file in files:
-        filePath =  "/".join((dirPath,file))  
-        if not os.path.isdir(filePath):
-            # intercept topic.json
-            if file == "topic.json":
-                with open(filePath) as f:
-                    content = f.read()
-                    # print(content)
-                    content = json.loads(content)
-                    title = content['title'] 
-                    tags = content['tags'] 
-                    files = content['files']
-                tagsStr = ", ".join(tags)
-                print(tagsStr)
+    topicFiles = []
 
-            # intercept introduction.html
-            if file == "introduction.html":                    
-                with open(filePath) as f:
-                    content = f.read()
-                    html += content                    
-                           
+    try:
+        file = "introduction.html"
+        filePath =  "/".join((dirPath,file))
+        with open(filePath) as f:
+            content = f.read()
+            topicFiles += [file]
+            showFile(file, filePath, f"{content}")
+    except:
+        pass        
 
+    try:
+        filePath =  "/".join((dirPath,"topic.json"))
+        with open(filePath) as f:
+            content = f.read()
+            # print(content)
+            content = json.loads(content)
+            title = content['title'] 
+            tags = content['tags'] 
+            topicFiles += content['files']
+            htmlTabs = tabs(topicFiles)
+        tagsStr = ", ".join(tags)
+        print(tagsStr)
+    except:
+        print("no topic.json!")    
 
-    for file in files:
+    for file in topicFiles:
         filePath =  "/".join((dirPath,file))  
         if not os.path.isdir(filePath):
             # bypass
@@ -107,22 +176,11 @@ def itemTopic(request, file_path):
             if fileExtension(file) == "py": language = "language-python"
             
             with open(filePath) as f:
-
-                html += "<p>"+file+"</p>"
-
-                html += '<pre><code class="'+language+'" >'
-
                 content = f.read()
-                html += escape(content)
-
-                html += '</code></pre>'
-                
-                # print(content)
-                # print("------------------------------------")
-                html += "<br>"
+                showFile(file, filePath, f'<pre><code class="{language}">{escape(content)}</code></pre>')
 
 
-    return render(request, 'dispatch/common.html', {"data":html , "tags": tags, "category":"", "tagsStr": tagsStr, "name": "Topics", "title": title})
+    return render(request, 'dispatch/common.html', {"data":itemTopicHtml , "tags": tags, "category":"", "tagsStr": tagsStr, "name": "Topics", "title": title, "tabs": htmlTabs})
 
 
 # def index(request):

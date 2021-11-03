@@ -9,7 +9,8 @@
   <meta name="description" content="Web development tutorials by example: Vue" />  
   {% block metatags %}{% endblock %}
   <link href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet">
-  <link href="https://unpkg.com/tailwindcss@^2/dist/tailwind.min.css" rel="stylesheet">
+  <link href="https://unpkg.com/tailwindcss@1.0.4/dist/tailwind.min.css" rel="stylesheet">
+  <!--<link href="https://unpkg.com/tailwindcss@^2/dist/tailwind.min.css" rel="stylesheet">-->
   <link href="{% static 'dispatch/prism-devel/prism.css' %}" rel="stylesheet">
   <script type="text/javascript" src="{% static 'dispatch/prism-devel/prism.js' %}"></script>
 </head>
@@ -123,7 +124,7 @@
         </div>
     </nav>
 
-    <div class="container mx-auto px-20 pt-20 bg-blue-100">
+    <div class="container mx-auto px-20 pt-16 bg-blue-100">
         {% block content %}{% endblock %}
     </div>    
 
