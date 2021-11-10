@@ -3,11 +3,12 @@ from django.contrib.staticfiles.views import serve
 from django.template import Template, Context
 from django.conf import settings
 from django.templatetags.static import static
-from django.http import HttpResponse
+from django.http import HttpResponse, HttpResponseRedirect
 from django.utils.html import escape
 from dispatch.tree import Documents
 import json
 import os
+from django.urls import reverse
 
 fileImg = static('/dispatch/img/file.jpg')
 folderImg = static('/dispatch/img/folder.png')
@@ -82,7 +83,7 @@ def tabs(filesList):
     notSelected = '''text-gray-600 py-4 px-10 block hover:text-blue-500
     focus:outline-none'''
 
-    htmlTabs = '<div class="bg-white"><div class="flex flex-col sm:flex-row">'
+    htmlTabs = '<div class="bg-white overflow-auto"><div class="flex flex-col sm:flex-row">'
 
     for fileName in filesList:
         if firstTime: 
@@ -121,6 +122,46 @@ def showFile(fileName, filePath, fileContent):
 def fileExtension(name):
     return name.split(".")[1]
 
+def itemCategory(request, href):
+
+    baseDir = str(settings.BASE_DIR)
+    compose = (baseDir, '/../code/', href)
+    filePath = "".join(compose)
+
+    # try:
+    #     filePath =  "/".join((dirPath,"category.json"))
+    #     with open(filePath) as f:
+    #         content = f.read()
+    #         # print(content)
+    #         content = json.loads(content)
+    #         title = content['title'] 
+    #         tags = content['tags'] 
+    #         topicFiles += content['files']
+    #         htmlTabs = tabs(topicFiles)
+    #     tagsStr = ", ".join(tags)
+    #     print(tagsStr)
+    # except:
+    #     print("no topic.json!") 
+
+    try:
+        with open(filePath) as f:
+            content = f.read()
+            print(content)
+    except:
+        print("no file")
+        #return HttpResponseRedirect(reverse('topics'))
+        #return HttpResponse("Category: "+ href)
+        content = "Category: "+ href
+
+    return render(request, 'dispatch/common.html', 
+                    {"data":content , 
+                    "tags": [], 
+                    "category":"", 
+                    "tagsStr": [], 
+                    "name": "Category", 
+                    "title": "", 
+                    "tabs": []})    
+
 def itemTopic(request, file_path):
     global itemTopicHtml
 
@@ -133,7 +174,17 @@ def itemTopic(request, file_path):
 
     tabFiles = []
 
+    # try:
     files = os.listdir(dirPath)
+    # except:
+    # return render(request, 'dispatch/common.html', 
+    #                 {"data":itemTopicHtml , 
+    #                 "tags": tags, 
+    #                 "category":"", 
+    #                 "tagsStr": tagsStr, 
+    #                 "name": "Topics", 
+    #                 "title": title, 
+    #                 "tabs": htmlTabs})
 
     topicFiles = []
 
@@ -179,8 +230,14 @@ def itemTopic(request, file_path):
                 content = f.read()
                 showFile(file, filePath, f'<pre><code class="{language}">{escape(content)}</code></pre>')
 
-
-    return render(request, 'dispatch/common.html', {"data":itemTopicHtml , "tags": tags, "category":"", "tagsStr": tagsStr, "name": "Topics", "title": title, "tabs": htmlTabs})
+    return render(request, 'dispatch/common.html', 
+                    {"data":itemTopicHtml , 
+                    "tags": tags, 
+                    "category":"", 
+                    "tagsStr": tagsStr, 
+                    "name": "Topics", 
+                    "title": title, 
+                    "tabs": htmlTabs})    
 
 
 # def index(request):

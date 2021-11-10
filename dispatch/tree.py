@@ -150,6 +150,7 @@ class Documents:
         if(self.category(item)):
             if self.debug: print("category"," ", end='')
             dirClass = 'text-green-600 underline'
+            href = "/category/".join(self.dirSections)+"/index.html"
         elif(self.topic(item)):
             if self.debug: print("topic"," ", end='')
             dirClass = 'text-blue-500 hover:text-red-500 cursor-pointer'            

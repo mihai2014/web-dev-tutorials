@@ -105,15 +105,17 @@ li {
   display: none;
 }
 .tags {
-  display: inline;
+  /* display: inline;*/
+  /* line-height: 2  */
   border: 1px solid blue;
   border-radius: 25px;
   padding: 5px;
-  height: 2em;   
+  height: 2em; 
 }
 </style>
 
   {% autoescape off %}
+
     {% if name == "Home" %}
     {% include "dispatch/home.html" %}
     {% endif %}    
@@ -121,10 +123,14 @@ li {
     {% if name == "About" %}
     {% include "dispatch/about.html" %}
     {% endif %}    
-    
-  {% endautoescape %}
 
-  {% autoescape off %}
+    {% if name == "Category" %}
+    {{ data }}
+    {% endif %}    
+
+ 
+    {% if name == "Topics" %}
+
     {{ tabs }}
 
     <h1 class="font-bold text-4xl">{{ title }}</h1>
@@ -138,13 +144,15 @@ li {
     {% if tags|length > 0 %}
     <div style="display: inline; margin-left:10px; color:blue;" class="font-bold">Tags:</div>
     {% for tag in tags %}
-      <div class="tags">{{ tag }}</div>
+      <div class="tags inline mb-1 leading-loose">{{ tag }}</div>
     {% endfor %}  
     {% endif %}
 
     <p>{{ data }}</p>
 
     <script type="text/javascript" src="{% static 'dispatch/js/tabs.js' %}"></script>
+
+    {% endif %}
 
   {% endautoescape %}
 
