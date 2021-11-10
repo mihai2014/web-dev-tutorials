@@ -8,6 +8,8 @@ File classification are made with json files:
 
 `{ "name" : "TailwindCss" }`
 
+Category directory could display an index.html file article.
+
 - Topic directory had a topic.json file which define meta tags and the files which will be displayed in the topic:
 
 `{
