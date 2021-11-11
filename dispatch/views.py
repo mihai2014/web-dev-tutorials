@@ -95,7 +95,6 @@ def tabs(filesList):
             active = "false"
 
         htmlTabs += f'<button id="button-{fileName}" active="{active}" class="{cls}">{fileName}</button>'
-        print(fileName)
     
     htmlTabs += '</div></div>'  
 
@@ -124,42 +123,48 @@ def fileExtension(name):
 
 def itemCategory(request, href):
 
+    # index.html path
     baseDir = str(settings.BASE_DIR)
     compose = (baseDir, '/../code/', href)
-    filePath = "".join(compose)
+    indexFilePath = "".join(compose)
 
-    # try:
-    #     filePath =  "/".join((dirPath,"category.json"))
-    #     with open(filePath) as f:
-    #         content = f.read()
-    #         # print(content)
-    #         content = json.loads(content)
-    #         title = content['title'] 
-    #         tags = content['tags'] 
-    #         topicFiles += content['files']
-    #         htmlTabs = tabs(topicFiles)
-    #     tagsStr = ", ".join(tags)
-    #     print(tagsStr)
-    # except:
-    #     print("no topic.json!") 
+    # category.json path (by removing ending "index.html" from the path)
+    parts = indexFilePath.split("/")
+    parts.pop()
+    jsonFilePath = "/".join(parts)+"/category.json"
 
     try:
-        with open(filePath) as f:
+        with open(jsonFilePath) as f:
             content = f.read()
-            print(content)
+            content = json.loads(content)
+            try: 
+                title = content['name'] 
+            except: 
+                title = "Dj/Vue-tutorial" 
+            try: 
+                tags = content['tags'] 
+            except: 
+                tags = ["Django","Vue","tutorial"]
+            tagsStr = ", ".join(tags)
+    except:
+        print("no topic.json!") 
+
+    try:
+        with open(indexFilePath) as f:
+            content = f.read()
     except:
         print("no file")
         #return HttpResponseRedirect(reverse('topics'))
         #return HttpResponse("Category: "+ href)
-        content = "Category: "+ href
+        content = "Dj/Vue-tutorial"
 
     return render(request, 'dispatch/common.html', 
                     {"data":content , 
-                    "tags": [], 
+                    "tags": tags, 
                     "category":"", 
-                    "tagsStr": [], 
+                    "tagsStr": tagsStr, 
                     "name": "Category", 
-                    "title": "", 
+                    "title": title, 
                     "tabs": []})    
 
 def itemTopic(request, file_path):
@@ -202,14 +207,12 @@ def itemTopic(request, file_path):
         filePath =  "/".join((dirPath,"topic.json"))
         with open(filePath) as f:
             content = f.read()
-            # print(content)
             content = json.loads(content)
             title = content['title'] 
             tags = content['tags'] 
             topicFiles += content['files']
             htmlTabs = tabs(topicFiles)
-        tagsStr = ", ".join(tags)
-        print(tagsStr)
+            tagsStr = ", ".join(tags)
     except:
         print("no topic.json!")    
 
@@ -220,7 +223,6 @@ def itemTopic(request, file_path):
             if file == "topic.json" or file == "introduction.html":
                 continue
 
-            # print(file,filePath)
             if fileExtension(file) == "js": language = "language-javascript"
             if fileExtension(file) == "html": language = "language-html"
             if fileExtension(file) == "json": language = "language-json"
