@@ -1,2 +1,5 @@
 tutorials -> source
 tutorials.mihaicoriu.ro     -> static
+
+public_html -> static
+mihaicorciu.ro -> source

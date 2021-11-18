@@ -26,7 +26,7 @@ SECRET_KEY = 'django-insecure-emt&l2pwicaq6_vwbbpq$990poa%%nyu2j)dhx3th_#99@bsyj
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = ['tutorials.mihaicorciu.ro','localhost','127.0.0.1']
+ALLOWED_HOSTS = ['tutorials.mihaicorciu.ro','mihaicorciu.ro','localhost','127.0.0.1']
 
 
 # Application definition

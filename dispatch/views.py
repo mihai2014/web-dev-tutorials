@@ -64,7 +64,8 @@ def topics(request):
     global docs
 
     html = '''
-    <h1>Vue Topics</h1>
+    <h1 class="font-bold">Topics</h1>
+    <br>
     '''
     html += docs.html
 
